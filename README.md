@@ -40,9 +40,9 @@ options:
   -i INPUTS [INPUTS ...], --inputs INPUTS [INPUTS ...]
                         List of files to combine to a mosaic
   -o OUTPUT, --output OUTPUT
-                        Name or path to the output file. If the file doesn't contain a mosaic pattern, it will be added to the file before the last dot character
-                        (e.g. out.mosaic.3x3.mp4). If it contains a mosaic pattern and the number of input files exceeds ROWS * COLUMNS, some input files will not be
-                        considered in the final output
+                        Name or path to the output file. If the file name doesn't contain a mosaic pattern, it will be added to the file before the last dot character
+                        (e.g. out.mosaic.3x3.mp4). If it contains a mosaic pattern it will be used to determine the ROWS and COLUMNS of the mosaic. If the number of input files exceeds ROWS * COLUMNS, some input files will not be
+                        considered in the final output. 
   --debug-text          Display a text overlay numbering the views
   -y, --overwrite       Overwrite output files
   --dry                 Print the ffmpeg command instead of running it
