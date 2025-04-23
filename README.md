@@ -54,37 +54,16 @@ For example to generate a 4x4 grid on input files from some directory (which can
 python mosaicgen.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
 ```
 
-> :warning: **Don't use quotes when specifying the input with a glob (aka wildcard) pattern, this will break the wildcard resolution:** `python mosaicgen.py -i "/Path/To/Input.MV.*.mp4"  -o out.mosaic.4x4.mp4 -y`
+> [!CAUTION]
+> **Don't use quotes when specifying the input with a glob (aka wildcard) pattern, this will break the wildcard resolution:**
+>
+> ```diff
+> - python mosaicgen.py -i "/Path/To/Input.MV.*.mp4"  -o out.mosaic.4x4.mp4 -y
+> + python mosaicgen.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
+> ```
 
-## IMPORTANT NOTE
+> [!TIP]
+>  If your shell doesn't support wildcard patterns or they don't work for you, you can specify the inputs as a list of files:
+>
+> ```python mosaicgen.py -i ./input/0000-0388MV.01.mp4 ./input/0000-0388MV.02.mp4 ./input/0000-0388MV.03.mp4 ./input/0000-0388MV.04.mp4 -o out.mosaic.2x2.mp4 -y```
 
-As of right now (23.04.2025) the script seams to be broken on Windows and Linux (tested with WSL Ubuntu). It is not working properly with wildcards in the input property. This:
-
-```sh
-python mosaicgen.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
-```
-
-does not work right now. To fix it you have to go into "mosaicgen.py" and add something like this (after line 19):
-
-```python
-inputs = [
-"./input/0000-0388MV.01.mp4",
-"./input/0000-0388MV.02.mp4",
-"./input/0000-0388MV.03.mp4",
-"./input/0000-0388MV.04.mp4",
-"./input/0000-0388MV.05.mp4",
-"./input/0000-0388MV.06.mp4",
-"./input/0000-0388MV.07.mp4",
-"./input/0000-0388MV.08.mp4",
-"./input/0000-0388MV.09.mp4",
-"./input/0000-0388MV.10.mp4",
-"./input/0000-0388MV.11.mp4",
-"./input/0000-0388MV.12.mp4",
-"./input/0000-0388MV.13.mp4",
-"./input/0000-0388MV.14.mp4",
-"./input/0000-0388MV.15.mp4",
-"./input/0000-0388MV.16.mp4",
-]
-```
-
-Afterwards you can run the command from above without any issues. (The input property from the command is now completely ignored though).
