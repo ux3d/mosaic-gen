@@ -37,7 +37,7 @@ else:
     output_filename = os.path.basename(output)
     output_path = os.path.dirname(output) + "/" if os.path.dirname(output) else ""
     output_identifiers = output_filename.split(".")
-    output = output_path + F"{".".join(output_identifiers[:-1])}.mosaic.{rows}x{cols}.{output_identifiers[-1]}"
+    output = output_path + F'{".".join(output_identifiers[:-1])}.mosaic.{rows}x{cols}.{output_identifiers[-1]}'
 
 
 
