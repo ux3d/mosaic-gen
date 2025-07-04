@@ -105,3 +105,52 @@ def extract_tiles_from_mosaic(input_file, source_rows, source_cols):
             tiles.append(tile)
     
     return tiles
+
+def apply_aspect_ratio_padding(input_stream, target_aspect_ratio):
+    """
+    Apply aspect ratio padding to an input stream using FFmpeg's pad filter.
+    Adds black borders to make the video match the target aspect ratio.
+    
+    Args:
+        input_stream: FFmpeg input stream
+        target_aspect_ratio: String in format "width:height" (e.g., "16:9")
+    
+    Returns:
+        FFmpeg stream with aspect ratio padding applied
+    """
+    import ffmpeg
+    
+    # Parse the target aspect ratio
+    try:
+        width_ratio, height_ratio = map(int, target_aspect_ratio.split(':'))
+        target_ratio = width_ratio / height_ratio
+    except (ValueError, ZeroDivisionError):
+        raise ValueError(f"Invalid aspect ratio format: {target_aspect_ratio}. Use format 'width:height' like '16:9'")
+    
+    # Calculate padding using FFmpeg expressions
+    # We'll use the pad filter with dynamic calculations
+    # The logic: if input is wider than target, add top/bottom padding; if taller, add left/right padding
+    
+    # Calculate target dimensions based on input
+    # If input_ratio > target_ratio: input is too wide, need top/bottom padding
+    # If input_ratio < target_ratio: input is too tall, need left/right padding
+    
+    # For width: if we need vertical padding, width stays same; if horizontal padding, width = height * target_ratio
+    # For height: if we need horizontal padding, height stays same; if vertical padding, height = width / target_ratio
+    
+    width_expr = f"if(gt(iw/ih,{target_ratio}),iw,ih*{target_ratio})"
+    height_expr = f"if(gt(iw/ih,{target_ratio}),iw/{target_ratio},ih)"
+    
+    # Center the content
+    x_expr = f"(ow-iw)/2"
+    y_expr = f"(oh-ih)/2"
+    
+    # Apply padding with black background
+    padded_stream = ffmpeg.filter(input_stream, 'pad', 
+                                 width=width_expr,
+                                 height=height_expr, 
+                                 x=x_expr, 
+                                 y=y_expr,
+                                 color='black')
+    
+    return padded_stream

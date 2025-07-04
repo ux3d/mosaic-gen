@@ -6,13 +6,14 @@ import json
 
 import os
 import re
-from util import find_closest_factors, build_ffmpeg_layout, sort_input_files, extract_tiles_from_mosaic
+from util import find_closest_factors, build_ffmpeg_layout, sort_input_files, extract_tiles_from_mosaic, apply_aspect_ratio_padding
 
 parser = argparse.ArgumentParser(description='Combine input video / images to a mosaic for use on a 3D Global multiview monitor')
 parser.add_argument( "-i", "--inputs", nargs='+', help="List of files to combine to a mosaic", required=True)
 parser.add_argument("-o", "--output", help="Name or path to the output file. If the file doesn't contain a mosaic pattern, it will be added to the file before the last dot character (e.g. out.mosaic.3x3.mp4). If it contains a mosaic pattern (e.g. 3x3) or Looking Glass format (e.g. 8x6a0.75), the dimensions will be extracted. If the number of input files exceeds ROWS * COLUMNS, some input files will not be considered in the final output", required=True)
 parser.add_argument("--debug-text", action="store_true", help="Display a text overlay for the views")
 parser.add_argument("-f", "--filter-views", type=str, help="Filter specific views to include in the output. Specify as a JSON array of view indices (0-based), e.g., '[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]' for a 4x4 grid from views 16-31")
+parser.add_argument("-a", "--aspect-ratio", type=str, help="Force aspect ratio for individual views by adding black borders. Format: 'width:height' (e.g., '16:9', '4:3', '1:1'). Views will be padded with black borders to match this aspect ratio.")
 parser.add_argument("-y", "--overwrite", action="store_true", help="Overwrite output files")
 parser.add_argument("--dry", action="store_true", help="Print the ffmpeg command instead of running it")
 args = parser.parse_args()
@@ -116,6 +117,14 @@ if args.filter_views:
 
 if len(input_streams) > rows * cols:
     input_streams = input_streams[:rows * cols]
+
+# Apply aspect ratio padding if specified
+if args.aspect_ratio:
+    try:
+        input_streams = [apply_aspect_ratio_padding(stream, args.aspect_ratio) for stream in input_streams]
+        print(f"Applied aspect ratio padding: {args.aspect_ratio}")
+    except ValueError as e:
+        raise ValueError(f"Aspect ratio error: {e}")
 
 if args.debug_text: 
     input_streams = [ffmpeg.drawtext(s, text=F"{i+1}", fontcolor="white", x="(w-text_w)/2",  y="(h-text_h)/2", fontsize=64) for i, s in enumerate(input_streams)]
