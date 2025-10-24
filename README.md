@@ -14,24 +14,38 @@ This is a convenience wrapper for FFMPEG to generate multiview mosaic videos
 python3 -m venv venv
 ```
 
+or
+
+```sh
+python -m venv venv
+```
+
 4. Activate the environment
+
+Linux / MacOS:
 
 ```sh
 source venv/bin/activate
 ```
 
+Windows:
+
+```sh
+venv\Scripts\activate
+```
+
 5. Install the dependencies
 
 ```sh
-pip install argparse ffmpeg-python
+python -m pip  install -r requirements.txt
 ```
 
-## Run the Script
+## For Videos
 
 Usage:
 
 ```
-usage: mosaicgen.py [-h] -i INPUTS [INPUTS ...] -o OUTPUT [--debug-text] [-y] [--dry]
+usage: mosaicgen_videos.py [-h] -i INPUTS [INPUTS ...] -o OUTPUT [--debug-text] [-y] [--dry]
 
 Combine input video / images to a mosaic for use on a 3D Global multiview monitor
 
@@ -51,19 +65,28 @@ options:
 For example to generate a 4x4 grid on input files from some directory (which can also be more or less than 16 files), run a command similar to the following:
 
 ```sh
-python mosaicgen.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
+python mosaicgen_videos.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
 ```
 
-> [!CAUTION]
-> **Don't use quotes when specifying the input with a glob (aka wildcard) pattern, this will break the wildcard resolution:**
+> [!CAUTION] > **Don't use quotes when specifying the input with a glob (aka wildcard) pattern, this will break the wildcard resolution:**
 >
 > ```diff
-> - python mosaicgen.py -i "/Path/To/Input.MV.*.mp4"  -o out.mosaic.4x4.mp4 -y
-> + python mosaicgen.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
+> - python mosaicgen_videos.py -i "/Path/To/Input.MV.*.mp4"  -o out.mosaic.4x4.mp4 -y
+> + python mosaicgen_videos.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
 > ```
 
 > [!TIP]
->  If your shell doesn't support wildcard patterns or they don't work for you, you can specify the inputs as a list of files:
+> If your shell doesn't support wildcard patterns or they don't work for you, you can specify the inputs as a list of files (This seems to be the case on windows.):
 >
-> ```python mosaicgen.py -i ./input/0000-0388MV.01.mp4 ./input/0000-0388MV.02.mp4 ./input/0000-0388MV.03.mp4 ./input/0000-0388MV.04.mp4 -o out.mosaic.2x2.mp4 -y```
+> `python mosaicgen_videos.py -i ./input/0000-0388MV.01.mp4 ./input/0000-0388MV.02.mp4 ./input/0000-0388MV.03.mp4 ./input/0000-0388MV.04.mp4 -o out.mosaic.2x2.mp4 -y`
 
+## For Images
+
+The output folder has to be created before running the script.
+
+Run:
+`python .\main_convert_images.py -i .\input -o .\output`
+
+Command line options:
+`--input DIR` : input directory of image files
+`--output DIR` : output directory of mosaic image files

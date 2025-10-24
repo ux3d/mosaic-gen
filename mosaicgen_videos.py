@@ -62,6 +62,7 @@ args = parser.parse_args()
 inputs = args.inputs
 output = args.output
 
+print(f"Received {len(inputs)} input files")
 inputs = sort_input_files(inputs)
 
 # Check if we have a single input that is itself a mosaic (like Looking Glass format)

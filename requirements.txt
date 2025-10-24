@@ -1,0 +1,9 @@
+
+setuptools
+argparse 
+imutils
+numpy
+pillow
+pathlib
+opencv-python
+ffmpeg-python
