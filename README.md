@@ -82,11 +82,17 @@ python mosaicgen_videos.py -i /Path/To/Input.MV.*.mp4  -o out.mosaic.4x4.mp4 -y
 
 ## For Images
 
-The output folder has to be created before running the script.
-
 Run:
 `python .\main_convert_images.py -i .\input -o .\output`
 
 Command line options:
 `--input DIR` : input directory of image files
 `--output DIR` : output directory of mosaic image files
+
+Behavior:
+
+- Reads `.png` files from the input directory (sorted by filename)
+- Creates one mosaic image from all views
+- Works with any number of input views (currently typically used with up to `120`)
+- Automatically picks a factorized grid layout (`cols x rows`)
+- Output filename pattern: `image.mosaic.CxA.png` where `C` is columns and `A` is rows
